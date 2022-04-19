@@ -1,0 +1,9 @@
+numpy
+opencv-python
+protobuf
+pytorch
+pillow
+matplotlib
+wxpython
+shapely
+tqdm
