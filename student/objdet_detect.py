@@ -217,13 +217,15 @@ def detect_objects(input_bev_maps, model, configs):
             img_detections = img_detections.cpu().numpy().astype(np.float32)
             #only first batch. It is how test.py works
             img_detections = post_processing(img_detections, configs)[0]
+            detections = img_detections[1]
 
+            """
             for detection in img_detections.values():
                 if( len(detection) == 0):
                     continue
                 data = detection.squeeze()
                 detections.append(data)
-
+            """
             #######
             ####### ID_S3_EX1-5 END #######
 
@@ -239,30 +241,29 @@ def detect_objects(input_bev_maps, model, configs):
     ## step 1 : check whether there are any detections
     if len(detections) != 0:
         ## step 2 : loop over all detections
-        for items in detections:
-            for row in items:
+        for row in detections:
+            #for row in items:
             ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
             #unpack from entry. See "What this task is about" S3_EX2 for order
 
                 #convert to types used in objects
                 #see objdet_tools.py
                 # extract detection
-                print(f"len(row) {len(row)} row {row}")
+                #print(f"len(row) {len(row)} row {row}")
 
-                _id, _x, _y, _z, _h, _w, _l, _yaw = row
+                _score, _x, _y, _z, _h, _w, _l, _yaw = row
 
-                # convert from metric into pixel coordinates
-                x = (_y - configs.lim_y[0]) / (configs.lim_y[1] - configs.lim_y[0]) * configs.bev_width
-                y = (_x - configs.lim_x[0]) / (configs.lim_x[1] - configs.lim_x[0]) * configs.bev_height
+                x = _y / configs.bev_height * (configs.lim_x[1] - configs.lim_x[0]) + configs.lim_x[0]
+                y = _x / configs.bev_width * (configs.lim_y[1] - configs.lim_y[0]) + configs.lim_y[0]
                 z = _z - configs.lim_z[0]
-                w = _w / (configs.lim_y[1] - configs.lim_y[0]) * configs.bev_width
-                l = _l / (configs.lim_x[1] - configs.lim_x[0]) * configs.bev_height
+                w = _w / configs.bev_width * ((configs.lim_y[1] - configs.lim_y[0]))
+                l = _l / configs.bev_height * (configs.lim_x[1] - configs.lim_x[0])
                 yaw = -_yaw
                 objects.append([1, x, y, z, _h, _w, _l, yaw])
 
 
     #######
-    ####### ID_S3_EX2 START #######
+    ####### ID_S3_EX2 END #######
 
     return objects
 
