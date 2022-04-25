@@ -75,7 +75,7 @@ def load_configs_model(model_name='darknet', configs=None):
         #https://github.com/maudzung/SFA3D/blob/master/sfa/test.py#L81
         configs.imagenet_pretrained = False
         configs.head_conv = 64
-        configs.num_classes = 3 #should this be 1 for only cars?
+        configs.num_classes = 3
         configs.num_center_offset = 2
         configs.num_z = 1
         configs.num_dim = 3
@@ -95,8 +95,17 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.down_ratio = 4
         configs.max_objects = 50
 
-        #other parms
-        configs.conf_thresh = 0.5
+
+        configs.K = 50
+        configs.num_samples = None
+        configs.num_workers = 4
+        configs.batch_size = 4
+        configs.conf_thresh = 0.5 # peak_thresh
+        configs.save_test_output = False
+        configs.output_format = 'image'
+        configs.output_video_fn = 'out_fpn_resnet'
+        configs.output_width = 608
+
 
         #######
         ####### ID_S3_EX1-3 END #######
@@ -219,13 +228,6 @@ def detect_objects(input_bev_maps, model, configs):
             img_detections = post_processing(img_detections, configs)[0]
             detections = img_detections[1]
 
-            """
-            for detection in img_detections.values():
-                if( len(detection) == 0):
-                    continue
-                data = detection.squeeze()
-                detections.append(data)
-            """
             #######
             ####### ID_S3_EX1-5 END #######
 
@@ -238,6 +240,9 @@ def detect_objects(input_bev_maps, model, configs):
     print("student task ID_S3_EX2")
     objects = []
 
+    bbox_x = (configs.lim_x[1] - configs.lim_x[0])
+    bbox_y = (configs.lim_y[1] - configs.lim_y[0])
+
     ## step 1 : check whether there are any detections
     if len(detections) != 0:
         ## step 2 : loop over all detections
@@ -247,23 +252,25 @@ def detect_objects(input_bev_maps, model, configs):
             #unpack from entry. See "What this task is about" S3_EX2 for order
 
                 #convert to types used in objects
-                #see objdet_tools.py
+                #see objdet_tools.py for other direction
                 # extract detection
-                #print(f"len(row) {len(row)} row {row}")
 
                 _score, _x, _y, _z, _h, _w, _l, _yaw = row
 
-                x = _y / configs.bev_height * (configs.lim_x[1] - configs.lim_x[0]) + configs.lim_x[0]
-                y = _x / configs.bev_width * (configs.lim_y[1] - configs.lim_y[0]) + configs.lim_y[0]
+                x = _y / configs.bev_height * bbox_x + configs.lim_x[0]
+                y = _x / configs.bev_width * bbox_y + configs.lim_y[0]
                 z = _z - configs.lim_z[0]
-                w = _w / configs.bev_width * ((configs.lim_y[1] - configs.lim_y[0]))
-                l = _l / configs.bev_height * (configs.lim_x[1] - configs.lim_x[0])
+                w = _w / configs.bev_width * bbox_y
+                l = _l / configs.bev_height * bbox_x
+                h = _h
                 yaw = -_yaw
-                objects.append([1, x, y, z, _h, _w, _l, yaw])
-
+                if( (x < configs.lim_x[0]) or (x > configs.lim_x[1]) or (y < configs.lim_y[0]) or (y > configs.lim_y[0])):
+                    #continue
+                    pass
+                objects.append([1, x, y, z, h, w, l, yaw])
 
     #######
     ####### ID_S3_EX2 END #######
-
+    print("objs len ", len(objects), "objs", objects)
     return objects
 

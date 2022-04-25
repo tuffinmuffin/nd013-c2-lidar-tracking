@@ -163,10 +163,11 @@ def bev_from_pcl(lidar_pcl_org, configs):
     lidar_pcl[:,0] = np.floor(lidar_pcl[:, 0] / bev_discret).astype('int32')
 
     # step 3 : perform the same operation as in step 2 for the y-coordinates but make sure that no negative bev-coordinates occur
+    bev_discret = (configs.lim_y[1] - configs.lim_y[0]) / configs.bev_width
     lidar_pcl[:,1] = np.floor(lidar_pcl[:, 1] / bev_discret + (configs.bev_width + 1) / 2).astype('int32')
 
     # step 4 : visualize point-cloud using the function show_pcl from a previous task
-    # show_pcl(lidar_pcl)
+    #show_pcl(lidar_pcl)
     #######
     ####### ID_S2_EX1 END #######
 
