@@ -210,7 +210,7 @@ def bev_from_pcl(lidar_pcl_org, configs):
     ## step 5 : temporarily visualize the intensity map using OpenCV to make sure that vehicles separate well from the background
     #pulled from example code
     vis = False
-    print(lidar_pcl_org.shape)
+    #print(lidar_pcl_org.shape)
     if vis:
         img_intensity = intensity_map * 256
         img_intensity = img_intensity.astype(np.uint8)
@@ -245,7 +245,7 @@ def bev_from_pcl(lidar_pcl_org, configs):
 
     ## step 3 : temporarily visualize the intensity map using OpenCV to make sure that vehicles separate well from the background
     vis = False
-    print(lidar_pcl_org.shape)
+    #print(lidar_pcl_org.shape)
     if vis:
         img_height = height_map * 256
         img_height = img_height.astype(np.uint8)

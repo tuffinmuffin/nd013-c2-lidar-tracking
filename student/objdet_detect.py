@@ -143,6 +143,9 @@ def load_configs(model_name='fpn_resnet', configs=None):
     configs.output_width = 608 # width of result image (height may vary)
     configs.obj_colors = [[0, 255, 255], [0, 0, 255], [255, 0, 0]] # 'Pedestrian': 0, 'Car': 1, 'Cyclist': 2
 
+    #no IOU min set - 70% listed in texts from course as the standard
+    configs.min_iou = 0.7
+
     return configs
 
 
@@ -231,7 +234,7 @@ def detect_objects(input_bev_maps, model, configs):
             #######
             ####### ID_S3_EX1-5 END #######
 
-        print(detections)
+        #print(detections)
 
 
     ####### ID_S3_EX2 START #######
@@ -271,6 +274,6 @@ def detect_objects(input_bev_maps, model, configs):
 
     #######
     ####### ID_S3_EX2 END #######
-    print("objs len ", len(objects), "objs", objects)
+    #print("objs len ", len(objects), "objs", objects)
     return objects
 
