@@ -1,5 +1,5 @@
-numpy
-opencv-python
+#numpy
+#opencv-python
 protobuf
 pytorch
 pillow

@@ -8,6 +8,16 @@ The final RMSE was 0.32 which was within the project reqs.
 
 <img title="Figure 1" alt="Alt text" src="images/F_S1_RMSE_Plot.png"> Figure 1 Final RMSE for part 1.
 
+## Step 2 - trackmanagment.py (track managment)
+###
+This section was to manage track states from initial creation to death. The first step was to initilize the track detected location and set unknown velocities.
+
+After that the track would be delete if not detected again, moved to tentative state if detected again, or moved to confirmed if detected over a treshold value.
+At each step the track can die and get removed if it is no longer tracked. FOr the case of confirmed tracks if its esitamted location grew too large it is removed.
+
+A final RMSE was 0.78.
+<img title="Figure 1" alt="Alt text" src="images/F_S2_RMSE_Plot.png"> Figure 2 Final RMSE for part 2.
+
 
 # TODO revmove below
 
