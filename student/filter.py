@@ -137,7 +137,7 @@ class Filter:
         ############
         #see work from https://classroom.udacity.com/nanodegrees/nd0013/parts/cd2690/modules/d3a07469-74b5-49c2-9c0e-3218c3ecd016/lessons/3210af97-9993-455a-baa7-c60e2217951f/concepts/233b4ae1-58d0-4a53-8307-8994f3e03209
         x = track.x
-        gamma = meas.z - meas.sensor.get_H(x)* x # residual
+        gamma = meas.z - meas.sensor.get_hx(x)# residual
         return gamma
 
         ############

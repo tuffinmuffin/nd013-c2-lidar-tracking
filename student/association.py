@@ -43,7 +43,7 @@ class Association:
         N = len(track_list)
         M = len(meas_list)
 
-        self.association_matrix = np.inf*np.ones((N,M))
+        self.association_matrix = np.empty((N,M))
 
         # loop over all tracks and all measurements to set up association matrix
         for i in range(N):
@@ -54,6 +54,8 @@ class Association:
                 #only assign if passes the gate
                 if self.gating(dist, meas.sensor):
                     self.association_matrix[i,j] = dist
+                else:
+                    self.association_matrix[i,j] = np.inf
 
         self.unassigned_tracks = list(range(N))
         self.unassigned_meas = list(range(M))
@@ -139,8 +141,7 @@ class Association:
         #see https://classroom.udacity.com/nanodegrees/nd0013/parts/cd2690/modules/d3a07469-74b5-49c2-9c0e-3218c3ecd016/lessons/aca6f174-54d6-4a71-ac30-786504a0dcb7/concepts/2d1bdc79-8740-4423-840e-f3122c3eb933
 
         limit = chi2.ppf(params.gating_threshold, df=sensor.dim_meas)
-
-        return limit < MHD
+        return MHD < limit
 
         ############
         # END student code
@@ -164,12 +165,14 @@ class Association:
     def associate_and_update(self, manager, meas_list, KF):
         # associate measurements and tracks
         self.associate(manager.track_list, meas_list, KF)
+        #print("updated. Track is ", self.unassigned_tracks, self.unassigned_meas, self.association_matrix.shape, self.association_matrix)
 
         # update associated tracks with measurements
         while self.association_matrix.shape[0]>0 and self.association_matrix.shape[1]>0:
 
             # search for next association between a track and a measurement
             ind_track, ind_meas = self.get_closest_track_and_meas()
+            #print(f"matched track {ind_track}, {ind_meas}")
             if np.isnan(ind_track):
                 print('---no more associations---')
                 break
@@ -177,6 +180,7 @@ class Association:
 
             # check visibility, only update tracks in fov
             if not meas_list[0].sensor.in_fov(track.x):
+                print("Not in Sensor FOV", track)
                 continue
 
             # Kalman update

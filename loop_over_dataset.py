@@ -85,7 +85,7 @@ np.random.seed(10) # make random values predictable
 #exec_detection = ['pcl_from_rangeimage', 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance']
 exec_detection = []
 exec_tracking = ['perform_tracking'] # options are 'perform_tracking'
-exec_visualization = ['show_tracks'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
+exec_visualization = ['show_tracks', 'make_tracking_movie'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
 exec_list = make_exec_list(exec_detection, exec_tracking, exec_visualization)
 vis_pause_time = 0 # set pause time between frames in ms (0 = stop between frames until key is pressed)
 
@@ -235,7 +235,7 @@ while True:
                     z[0] = z[0] + np.random.normal(0, params.sigma_cam_i)
                     z[1] = z[1] + np.random.normal(0, params.sigma_cam_j)
                     meas_list_cam = camera.generate_measurement(cnt_frame, z, meas_list_cam)
-
+            #print(f" lidar {len(meas_list_lidar)} camera {len(meas_list_cam)}")
             # Kalman prediction
             for track in manager.track_list:
                 print('predict track', track.id)

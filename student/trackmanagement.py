@@ -87,7 +87,7 @@ class Track:
     #get max x or y P. Ignore z as this is not expected to be used normally
     def get_max_P(self):
         max_p = max(self.P[0,0], self.P[1,1])
-        print(max_p)
+        #print(max_p)
         return max_p
 
     def update_attributes(self, meas):
@@ -101,11 +101,13 @@ class Track:
             self.yaw = np.arccos(M_rot[0,0]*np.cos(meas.yaw) + M_rot[0,1]*np.sin(meas.yaw)) # transform rotation from sensor to vehicle coordinates
 
     def track_score_update(self, tracked):
+        #print(tracked, "pre", self.history)
         self.history[:-1] = self.history[1:]
         if tracked:
             self.history[-1] = 1
         else:
             self.history[-1] = 0
+        #print(tracked, "post", self.history)
         self.score = np.mean(self.history)
 
 
@@ -134,22 +136,26 @@ class Trackmanagement:
         # decrease score for unassigned tracks
         for i in unassigned_tracks:
             track = self.track_list[i]
+            print("unassigned_tracks", i, track)
             # check visibility
             if meas_list: # if not empty
                 if meas_list[0].sensor.in_fov(track.x):
+                    print("doing ", meas_list[0].sensor.name)
                     track.track_score_update(False)
+                else:
+                    print("no meas")
 
             #if track was not detected after being initilizied remove it
             if track.state == 'initialized' and track.score < 1./params.window:
                 print("removing init track")
                 delete_list.append(track)
                 #todo remove after testing if getting hit
-                raise Exception("removing initialzied track")
+                #raise Exception("removing initialzied track")
             #track never moved to confirmed before decaying again
             elif track.state == 'tentative' and track.score < 1./params.window:
                 delete_list.append(track)
                 #todo remove after testing if getting hit
-                raise Exception("removing tentative track")
+                #raise Exception("removing tentative track")
 
 
         for track in self.track_list:
@@ -193,7 +199,7 @@ class Trackmanagement:
         # - increase track score
         # - set track state to 'tentative' or 'confirmed'
         ############
-
+        #print("track", track)
         track.track_score_update(True)
 
         #if detected a 2nd time update to tentative
