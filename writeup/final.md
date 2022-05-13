@@ -18,6 +18,16 @@ At each step the track can die and get removed if it is no longer tracked. FOr t
 A final RMSE was 0.78.
 <img title="Figure 1" alt="Alt text" src="images/F_S2_RMSE_Plot.png"> Figure 2 Final RMSE for part 2.
 
+## Step 3 - association.py (track /meas association)
+###
+This section was to associate measurements to tracks. This worked farirly well it seemed. However it appeared that I may have been removing
+tracks too soon. Tracks kept getting removed and being reetablished after several frames.
+
+However as objects were tracked false measurments did not appear to be converted to true tracks. In the future looking more closley at how tracks
+are being pruned may help to reduce the number of tracks that are deleted and readded.
+
+A final RMSE was 0.78.
+<img title="Figure 1" alt="Alt text" src="images/F_S3_RMSE_Plot.png"> Figure 3 Final RMSE for part 3.
 
 # TODO revmove below
 

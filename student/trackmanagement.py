@@ -158,7 +158,8 @@ class Trackmanagement:
             elif track.state == 'confirmed' and track.score < params.delete_threshold:
                 delete_list.append(track)
                 #todo remove after testing if getting hit
-                raise Exception("removing confirmed track")
+                #raise Exception("removing confirmed track")
+
 
 
         for i in delete_list:
