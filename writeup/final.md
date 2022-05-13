@@ -46,3 +46,6 @@ Final project Video
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/kFlF-6-usT0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+
+Final video embedded below
+[![Final Tracking with Sensor Fusion](http://img.youtube.com/vi/kFlF-6-usT0/0.jpg)](https://youtu.be/kFlF-6-usT0 "Final Tracking with Sensor Fusion")
