@@ -48,4 +48,43 @@ Final project Video
 
 
 Final video embedded below
+
 [![Final Tracking with Sensor Fusion](http://img.youtube.com/vi/kFlF-6-usT0/0.jpg)](https://youtu.be/kFlF-6-usT0 "Final Tracking with Sensor Fusion")
+
+
+
+## Write up Questions
+
+1. Write a short recap of the four tracking steps and what you implemented there (filter, track management, association, camera fusion). Which results did you achieve? Which part of the project was most difficult for you to complete, and why?
+
+Details of each step are above.
+
+Data flow
+* New detections are captured by a sensor.
+* The detections are associated by the association.py file to tracks in trackmanagment.py
+* detections without an assosication are then added as a new track.
+* exsisting tracks are location is updated via predict in the filter.py and then updated based on assicated data with update.
+* If tracks are not in the new detections the track managment will note this and the kalman filter uncertainy will increase.
+* If the tracks are detected the managment will note this and the kalman filter will increase their rating.
+* Finally tracks that fall outside of certain metrics will be culled.
+
+The hardest part turned out to be the association step. This was due to a bug in the track management checking if the track uncertainty was too great and this took me a long time to track down. FOllowing that until the provided covience matrics for 3d was found on the project board this was giving me math difficulties to make sure it was updated correctly.
+
+2. Do you see any benefits in camera-lidar fusion compared to lidar-only tracking (in theory and in your concrete results)?
+Yes. The results with camera augmentation improved the tracks and a few ghosts tracks that never were confirmed were culled much sooner. This followed the theory of how sensor fusion should work.
+
+3. Which challenges will a sensor fusion system face in real-life scenarios? Did you see any of these challenges in the project?
+AI detecting false positives due to various factors. In the project this was caused often by bushes. Then also detecting objets that are not part of the road (cars were found by AI behind fences).
+
+Weather and dirt would be another factor. However this did not come into play for this.
+
+According to some "cyber security" someone spoffing a car with a cardboard cut out or throwing dirt at the windsheild. They can be silly by bad actors should be considered. Sensor fusion could help with this. Radar on a paper cutout or one sensor being occulded or fooled may not affect other sensors.
+
+
+4. Can you think of ways to improve your tracking results in the future?
+
+The first one that comes to mind would be adding more sensors from the car to the fusion. We have multiple cameras with diffrent FOVs and we have other lidars and a radar that can be used to add extra data to the system.
+
+THe AI detection could be improved. THe provided one seemed fairly solid for this type of class but the state of the art is better.
+
+
